@@ -18,6 +18,9 @@ private:
     swerve::requests::FieldCentric drive = swerve::requests::FieldCentric{}
         .WithDeadband(MaxSpeed * 0.1).WithRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
         .WithDriveRequestType(swerve::DriveRequestType::OpenLoopVoltage); // Use open-loop control for drive motors
+    swerve::requests::RobotCentric aimedDrive = swerve::requests::RobotCentric{}
+        .WithDeadband(MaxSpeed*0.1).WithRotationalDeadband(MaxAngularRate*0.1)
+        .WithDriveRequestType(swerve::DriveRequestType::OpenLoopVoltage);
     swerve::requests::SwerveDriveBrake brake{};
     swerve::requests::PointWheelsAt point{};
 
@@ -29,7 +32,13 @@ private:
 
 public:
     subsystems::CommandSwerveDrivetrain drivetrain{TunerConstants::CreateDrivetrain()};
-
+    void setAimedValues(double rotation, double straiffe, double lateral){
+        aimedDrive.RotationalRate(rotation);
+        aimedDrive.VelocityX = (lateral);
+        aimedDrive.VelocityY = (straiffe);
+        drivetrain.ApplyRequest(aimedDrive);
+        return;
+    }
     RobotContainer();
 
     frc2::CommandPtr GetAutonomousCommand();

@@ -5,12 +5,14 @@
 #pragma once
 
 #include "ctre/phoenix6/HootAutoReplay.hpp"
-
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/TimedRobot.h>
 #include <frc2/command/CommandPtr.h>
 #include <optional>
-
+#include <LimelightHelpers.h>
 #include "RobotContainer.h"
+#include <frc/controller/PIDController.h>
+#include <subsystems/vision.h>
 
 class Robot : public frc::TimedRobot {
 public:
@@ -33,7 +35,7 @@ private:
     std::optional<frc2::CommandPtr> m_autonomousCommand;
 
     RobotContainer m_container;
-
+    frc::XboxController driverController;
     /* log and replay timestamp and joystick data */
     ctre::phoenix6::HootAutoReplay m_timeAndJoystickReplay = ctre::phoenix6::HootAutoReplay{}
         .WithTimestampReplay()
