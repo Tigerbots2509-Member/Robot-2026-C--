@@ -3,7 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "Robot.h"
-
 #include <frc2/command/CommandScheduler.h>
 
 Robot::Robot() :driverController{0}{}
@@ -83,6 +82,11 @@ void Robot::TeleopPeriodic() {
         rotationalValues(26, &distance, &AprilTagAngle, 5.75, 10);
         frc::SmartDashboard::PutNumber("Distance To AprilTag", distance);
         frc::SmartDashboard::PutNumber("Angle to AprilTag", AprilTagAngle);
+    };
+    if(driverController.GetLeftBumper()){
+        Intake.intakeIn();
+    }else{
+        Intake.intakeStop();
     };
 }
 

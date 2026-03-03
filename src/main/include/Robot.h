@@ -13,6 +13,7 @@
 #include "RobotContainer.h"
 #include <frc/controller/PIDController.h>
 #include <subsystems/vision.h>
+#include <subsystems/intake.h>
 class Robot : public frc::TimedRobot {
 public:
     Robot();
@@ -39,4 +40,5 @@ private:
     ctre::phoenix6::HootAutoReplay m_timeAndJoystickReplay = ctre::phoenix6::HootAutoReplay{}
         .WithTimestampReplay()
         .WithJoystickReplay();
+    intake Intake;
 };
