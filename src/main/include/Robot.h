@@ -13,7 +13,6 @@
 #include "RobotContainer.h"
 #include <frc/controller/PIDController.h>
 #include <subsystems/vision.h>
-
 class Robot : public frc::TimedRobot {
 public:
     Robot();
