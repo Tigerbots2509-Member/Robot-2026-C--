@@ -11,9 +11,13 @@
 #include <optional>
 #include <LimelightHelpers.h>
 #include "RobotContainer.h"
+#include <frc2/command/button/CommandXboxController.h>
 #include <frc/controller/PIDController.h>
 #include <subsystems/vision.h>
 #include <subsystems/intake.h>
+#include <subsystems/hopperFeeder.h>
+#include <subsystems/launcher.h>
+#include <subsystems/climber.h>
 class Robot : public frc::TimedRobot {
 public:
     Robot();
@@ -33,12 +37,15 @@ public:
 
 private:
     std::optional<frc2::CommandPtr> m_autonomousCommand;
-
     RobotContainer m_container;
-    frc::XboxController driverController;
+    frc::XboxController coPilot{1};
+    frc::XboxController driverController{0};
     /* log and replay timestamp and joystick data */
     ctre::phoenix6::HootAutoReplay m_timeAndJoystickReplay = ctre::phoenix6::HootAutoReplay{}
         .WithTimestampReplay()
         .WithJoystickReplay();
     intake Intake;
+    hopperFeeder Hopper;
+    launcher Launcher;
+    climber Climber;
 };

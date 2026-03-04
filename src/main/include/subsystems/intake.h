@@ -3,13 +3,13 @@
 #include "frc/Encoder.h"
 class intake{
     public:
-        intake::intake();
-        void intake::intakeLiftUp();
-        void intake::intakeLiftStop();
-        void intake::intakeLiftDown();
-        void intake::intakeIn();
-        void intake::intakeStop();
-        void intake::intakeOut();
+        intake();
+        void intakeLiftUp();
+        void intakeLiftStop();
+        void intakeLiftDown();
+        void intakeIn();
+        void intakeStop();
+        void intakeOut();
     private:
         ctre::phoenix6::hardware::TalonFX mLift{15};
         ctre::phoenix6::hardware::TalonFX mIntake{10};

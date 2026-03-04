@@ -20,6 +20,7 @@ void intake::intakeLiftDown(){
     if(!liftMax.Get()){
         mLift.Set(0.2);
     }else{
+        eLift.Reset();
         intakeLiftStop();
     }
     return;

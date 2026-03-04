@@ -5,7 +5,7 @@
 #include "Robot.h"
 #include <frc2/command/CommandScheduler.h>
 
-Robot::Robot() :driverController{0}{}
+Robot::Robot(){}
 
 void Robot::RobotPeriodic() {
     m_timeAndJoystickReplay.Update();
@@ -50,7 +50,6 @@ void Robot::TeleopPeriodic() {
     double distDerivative=0; //Rate of change of your proportional, smooths out the change
     frc::PIDController distTargetingPID(distProptional,distIntegral,distDerivative); //PID to maintain dist to target
     frc::PIDController angleTargetingPID{angleProptional,angleIntegral,angleDerivative}; //PID to maintain angle to target
-    
     if(driverController.GetAButton()){
         frc::SmartDashboard::PutBoolean("TV", driverController.GetAButton());
         if(tagTargeting(12, &distance, &rotation)){
@@ -78,16 +77,50 @@ void Robot::TeleopPeriodic() {
         frc::SmartDashboard::PutBoolean("TV", driverController.GetAButton());
         //DriveTrain.tankDrive(0, angleTargetingPID.Calculate(0,0));
   }
-    if (driverController.GetXButton()) {
+    if (driverController.GetXButton()) {        //Wouldn't we want this apart of the drivers a button and not a seperate
         rotationalValues(26, &distance, &AprilTagAngle, 5.75, 10);
         frc::SmartDashboard::PutNumber("Distance To AprilTag", distance);
         frc::SmartDashboard::PutNumber("Angle to AprilTag", AprilTagAngle);
     };
-    if(driverController.GetLeftBumper()){
+    if(coPilot.GetLeftTriggerAxis()>0.25){
+        Hopper.hopperToLauncher();
+    }else{
+        Hopper.hopperZero();
+    }
+
+    if(coPilot.GetLeftStickButton()||coPilot.GetRightStickButton()){
+        Launcher.wallOfBalls();
+    }else if(coPilot.GetRightTriggerAxis()>=0.25){
+        Launcher.launchByPower();
+    }else{
+        Launcher.launchZero();
+    }
+
+    if(coPilot.GetAButton()){
+        Intake.intakeLiftDown();
+    }else if(coPilot.GetYButton()){
+        Intake.intakeLiftUp();
+    }else{
+        Intake.intakeLiftStop();
+    }
+    
+    if(coPilot.GetLeftBumper()){
         Intake.intakeIn();
+    }else if(coPilot.GetRightBumper()){
+        Intake.intakeOut();
     }else{
         Intake.intakeStop();
     };
+
+    if(coPilot.GetPOV()==0){
+        Climber.climbUp();
+    }else if(coPilot.GetPOV()==180){
+        Climber.climbDown();
+    }else{
+        Climber.climbZero();
+    }
+
+
 }
 
 void Robot::TeleopExit() {}
