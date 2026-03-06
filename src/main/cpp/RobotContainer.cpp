@@ -3,8 +3,9 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "RobotContainer.h"
-
+#include "frc2/command/RunCommand.h"
 #include <frc2/command/Commands.h>
+#include <frc2/command/InstantCommand.h>
 #include <frc2/command/button/RobotModeTriggers.h>
 
 RobotContainer::RobotContainer()
@@ -24,7 +25,15 @@ void RobotContainer::ConfigureBindings()
                 .WithRotationalRate(-joystick.GetRightX() * MaxAngularRate); // Drive counterclockwise with negative X (left)
         })
     );
-
+    
+    //(coPilot.LeftStick()||coPilot.RightStick()).WhileTrue(Launcher.wallOfBalls()).OnFalse(Launcher.launchZero());
+    coPilot.POVDown().WhileTrue(Climber.climbDown()).OnFalse(Climber.climbZero());
+    coPilot.POVUp().WhileTrue(Climber.climbUp()).OnFalse(Climber.climbZero());
+    coPilot.A().WhileTrue(Intake.intakeLiftDown()).OnFalse(Intake.intakeLiftStop());
+    coPilot.Y().WhileTrue(Intake.intakeLiftUp()).OnFalse(Intake.intakeLiftStop());
+    coPilot.LeftBumper().WhileTrue(Intake.intakeIn()).OnFalse(Intake.intakeStop());
+    coPilot.RightBumper().WhileTrue(Intake.intakeOut()).OnFalse(Intake.intakeStop());
+    coPilot.LeftTrigger().WhileTrue(Launcher.launchByPower()).OnFalse(Launcher.launchZero());
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
     frc2::RobotModeTriggers::Disabled().WhileTrue(

@@ -1,6 +1,6 @@
 #include <subsystems/climber.h>
 climber::climber(){};
-void climber::climbDown(){
+frc2::CommandPtr climber::climbDown(){
     if(!minClimb.Get()){
         mClimb.Set(ControlMode::PercentOutput,-0.2);
     }else{
@@ -8,11 +8,11 @@ void climber::climbDown(){
         return;
     }
 };
-void climber::climbUp(){
+frc2::CommandPtr climber::climbUp(){
     mClimb.Set(ControlMode::PercentOutput,0.2);
     return;
 };
-void climber::climbZero(){
+frc2::CommandPtr climber::climbZero(){
     mClimb.Set(ControlMode::PercentOutput,0);
     return;
 };

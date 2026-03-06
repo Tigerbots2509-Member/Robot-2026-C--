@@ -1,6 +1,6 @@
 #include <subsystems/intake.h>
 intake::intake(){};
-void intake::intakeIn(){
+frc2::CommandPtr intake::intakeIn(){
     if(!liftMax.Get()){
         mIntake.Set(-0.2);
     }else{
@@ -8,15 +8,15 @@ void intake::intakeIn(){
     };
     return;
 };
-void intake::intakeOut(){
+frc2::CommandPtr intake::intakeOut(){
     mIntake.Set(0.2);
     return;
 };
-void intake::intakeStop(){
+frc2::CommandPtr intake::intakeStop(){
     mIntake.Set(0);
     return;
 };
-void intake::intakeLiftDown(){
+frc2::CommandPtr intake::intakeLiftDown(){
     if(!liftMax.Get()){
         mLift.Set(0.2);
     }else{
@@ -25,7 +25,7 @@ void intake::intakeLiftDown(){
     }
     return;
 };
-void intake::intakeLiftUp(){
+frc2::CommandPtr intake::intakeLiftUp(){
     if(eLift.Get()>=700){
         intakeLiftStop();
     }else{
@@ -33,7 +33,7 @@ void intake::intakeLiftUp(){
     }
     return;
 };
-void intake::intakeLiftStop(){
+frc2::CommandPtr intake::intakeLiftStop(){
     mIntake.Set(0);
     return;
 };

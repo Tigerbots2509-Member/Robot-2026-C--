@@ -8,7 +8,10 @@
 #include <frc2/command/button/CommandXboxController.h>
 #include "subsystems/CommandSwerveDrivetrain.h"
 #include "Telemetry.h"
-
+#include "subsystems/intake.h"
+#include "subsystems/launcher.h"
+#include "subsystems/hopperFeeder.h"
+#include "subsystems/climber.h"
 class RobotContainer {
 private:
     units::meters_per_second_t MaxSpeed = 1.0 * TunerConstants::kSpeedAt12Volts; // kSpeedAt12Volts desired top speed
@@ -30,7 +33,7 @@ private:
     /* Note: This must be constructed before the drivetrain, otherwise we need to
      *       define a destructor to un-register the telemetry from the drivetrain */
     Telemetry logger{MaxSpeed};
-
+    frc2::CommandXboxController coPilot{1};
     frc2::CommandXboxController joystick{0};
 
 public:
@@ -55,4 +58,9 @@ public:
 
 private:
     void ConfigureBindings();
+    intake Intake;
+    launcher Launcher;
+    hopperFeeder hopper;
+    climber Climber;
+    
 };
