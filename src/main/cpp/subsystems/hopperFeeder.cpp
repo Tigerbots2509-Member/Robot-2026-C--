@@ -2,7 +2,7 @@
 hopperFeeder::hopperFeeder(){};
 
 frc2::CommandPtr  hopperFeeder::hopperToLauncher(){
-    mFeeder.Set(0.2);
+    mFeeder.Set(0.8);
     return;
 };
 frc2::CommandPtr  hopperFeeder::hopperZero(){
@@ -10,6 +10,6 @@ frc2::CommandPtr  hopperFeeder::hopperZero(){
     return;
 };
 frc2::CommandPtr  hopperFeeder::hopperBack(){
-    mFeeder.Set(-0.2);
+    mFeeder.Set(-0.8);
     return;
 };

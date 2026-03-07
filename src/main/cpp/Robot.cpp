@@ -37,6 +37,7 @@ void Robot::TeleopInit() {
 }
 
 void Robot::TeleopPeriodic() {
+    
     double strafe;
     double lateral;
     double distance;//value to tell you how far your camera is from the april tag
@@ -50,9 +51,8 @@ void Robot::TeleopPeriodic() {
     double distDerivative=0; //Rate of change of your proportional, smooths out the change
     frc::PIDController distTargetingPID(distProptional,distIntegral,distDerivative); //PID to maintain dist to target
     frc::PIDController angleTargetingPID{angleProptional,angleIntegral,angleDerivative}; //PID to maintain angle to target
-    if(driverController.GetAButton()){
+    if(driverController.GetAButton()&&tagTargeting(12, &distance, &rotation)){          //Do we want to move this to the drivetrain class or the vision class
         frc::SmartDashboard::PutBoolean("TV", driverController.GetAButton());
-        if(tagTargeting(12, &distance, &rotation)){
             frc::SmartDashboard::PutNumber("Angle PID Result:", .1*angleTargetingPID.Calculate(rotation,0));
             rotation = .1*angleTargetingPID.Calculate(rotation,0);
             frc::SmartDashboard::PutNumber("Distance PID Result:", distTargetingPID.Calculate(distance,1));
@@ -68,59 +68,22 @@ void Robot::TeleopPeriodic() {
             frc::SmartDashboard::PutNumber("Rotation:",rotation);
             frc::SmartDashboard::PutNumber("Distance:",distance);
             frc::SmartDashboard::PutNumber("power", angleTargetingPID.Calculate(rotation,0));
-        }else{
-            //DriveTrain.tankDrive(0, 0);
-    }
     }else{
         lateral = -driverController.GetLeftY();
         rotation = driverController.GetRightX();
         frc::SmartDashboard::PutBoolean("TV", driverController.GetAButton());
         //DriveTrain.tankDrive(0, angleTargetingPID.Calculate(0,0));
   }
-    if (driverController.GetXButton()) {        //Wouldn't we want this apart of the drivers a button and not a seperate
-        rotationalValues(26, &distance, &AprilTagAngle, 5.75, 10);
+    if (driverController.GetXButton()&&rotationalValues(ClosestHubId("limelight-b"), &distance, &AprilTagAngle, 5.75, 10)) {        //Wouldn't we want this apart of the drivers a button and not a seperate
         frc::SmartDashboard::PutNumber("Distance To AprilTag", distance);
         frc::SmartDashboard::PutNumber("Angle to AprilTag", AprilTagAngle);
     };
-    if(coPilot.GetLeftTriggerAxis()>0.25){
-        Hopper.hopperToLauncher();
+    if(driverController.GetRightBumper()){
+        m_container.creepMult=0.75;
     }else{
-        Hopper.hopperZero();
-    }
-
-    if(coPilot.GetLeftStickButton()||coPilot.GetRightStickButton()){
-        Launcher.wallOfBalls();
-    }else if(coPilot.GetRightTriggerAxis()>=0.25){
-        Launcher.launchByPower();
-    }else{
-        Launcher.launchZero();
-    }
-
-    if(coPilot.GetAButton()){
-        Intake.intakeLiftDown();
-    }else if(coPilot.GetYButton()){
-        Intake.intakeLiftUp();
-    }else{
-        Intake.intakeLiftStop();
+        m_container.creepMult=1;
     }
     
-    if(coPilot.GetLeftBumper()){
-        Intake.intakeIn();
-    }else if(coPilot.GetRightBumper()){
-        Intake.intakeOut();
-    }else{
-        Intake.intakeStop();
-    };
-
-    if(coPilot.GetPOV()==0){
-        Climber.climbUp();
-    }else if(coPilot.GetPOV()==180){
-        Climber.climbDown();
-    }else{
-        Climber.climbZero();
-    }
-
-
 }
 
 void Robot::TeleopExit() {}

@@ -33,12 +33,13 @@ private:
     /* Note: This must be constructed before the drivetrain, otherwise we need to
      *       define a destructor to un-register the telemetry from the drivetrain */
     Telemetry logger{MaxSpeed};
-    frc2::CommandXboxController coPilot{1};
-    frc2::CommandXboxController joystick{0};
+    
 
 public:
+    double creepMult = 1;
     subsystems::CommandSwerveDrivetrain drivetrain{TunerConstants::CreateDrivetrain()};
-
+    frc2::CommandXboxController coPilot{1};
+    frc2::CommandXboxController joystick{0};
     swerve::requests::RobotCentric aimedDrive = swerve::requests::RobotCentric{}
         .WithDeadband(MaxSpeed*0.1).WithRotationalDeadband(MaxAngularRate*0.1) //Add a 10% deadband
         .WithDriveRequestType(swerve::DriveRequestType::OpenLoopVoltage)
@@ -60,7 +61,7 @@ private:
     void ConfigureBindings();
     intake Intake;
     launcher Launcher;
-    hopperFeeder hopper;
+    hopperFeeder Hopper;
     climber Climber;
     
 };

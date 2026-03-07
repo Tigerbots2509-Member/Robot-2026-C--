@@ -20,9 +20,9 @@ void RobotContainer::ConfigureBindings()
     drivetrain.SetDefaultCommand(
         // Drivetrain will execute this command periodically
         drivetrain.ApplyRequest([this]() -> auto&& {
-            return drive.WithVelocityX(-joystick.GetLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                .WithVelocityY(-joystick.GetLeftX() * MaxSpeed) // Drive left with negative X (left)
-                .WithRotationalRate(-joystick.GetRightX() * MaxAngularRate); // Drive counterclockwise with negative X (left)
+            return drive.WithVelocityX(-joystick.GetLeftY() * MaxSpeed*creepMult) // Drive forward with negative Y (forward)
+                .WithVelocityY(-joystick.GetLeftX() * MaxSpeed*creepMult) // Drive left with negative X (left)
+                .WithRotationalRate(-joystick.GetRightX() * MaxAngularRate*creepMult); // Drive counterclockwise with negative X (left)
         })
     );
     
@@ -33,7 +33,8 @@ void RobotContainer::ConfigureBindings()
     coPilot.Y().WhileTrue(Intake.intakeLiftUp()).OnFalse(Intake.intakeLiftStop());
     coPilot.LeftBumper().WhileTrue(Intake.intakeIn()).OnFalse(Intake.intakeStop());
     coPilot.RightBumper().WhileTrue(Intake.intakeOut()).OnFalse(Intake.intakeStop());
-    coPilot.LeftTrigger().WhileTrue(Launcher.launchByPower()).OnFalse(Launcher.launchZero());
+    coPilot.RightTrigger().WhileTrue(Launcher.setLauncherSpeed(18)).OnFalse(Launcher.launchZero());
+    coPilot.LeftTrigger().WhileTrue(Hopper.hopperToLauncher()).OnFalse(Hopper.hopperZero());
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
     frc2::RobotModeTriggers::Disabled().WhileTrue(

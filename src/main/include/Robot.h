@@ -38,8 +38,6 @@ public:
 private:
     std::optional<frc2::CommandPtr> m_autonomousCommand;
     RobotContainer m_container;
-    
-    frc::XboxController coPilot{1};
     frc::XboxController driverController{0};
     // frc2::Trigger xButton = test.X();
     /* log and replay timestamp and joystick data */
