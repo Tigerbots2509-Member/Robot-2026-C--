@@ -39,6 +39,7 @@ private:
     std::optional<frc2::CommandPtr> m_autonomousCommand;
     RobotContainer m_container;
     frc::XboxController driverController{0};
+    frc::XboxController coPilot{1};
     // frc2::Trigger xButton = test.X();
     /* log and replay timestamp and joystick data */
     ctre::phoenix6::HootAutoReplay m_timeAndJoystickReplay = ctre::phoenix6::HootAutoReplay{}

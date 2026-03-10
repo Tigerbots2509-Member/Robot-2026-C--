@@ -74,7 +74,8 @@ void Robot::TeleopPeriodic() {
         frc::SmartDashboard::PutBoolean("TV", driverController.GetAButton());
         //DriveTrain.tankDrive(0, angleTargetingPID.Calculate(0,0));
   }
-    if (driverController.GetXButton()&&rotationalValues(ClosestHubId("limelight-b"), &distance, &AprilTagAngle, 5.75, 10)) {        //Wouldn't we want this apart of the drivers a button and not a seperate
+    if (coPilot.GetRightTriggerAxis()<0&&rotationalValues(ClosestHubId("limelight-b"), &distance, &AprilTagAngle, 5.75, 10)) {        //Wouldn't we want this apart of the drivers a button and not a seperate
+        Launcher.setLauncherSpeed(distance);
         frc::SmartDashboard::PutNumber("Distance To AprilTag", distance);
         frc::SmartDashboard::PutNumber("Angle to AprilTag", AprilTagAngle);
     };

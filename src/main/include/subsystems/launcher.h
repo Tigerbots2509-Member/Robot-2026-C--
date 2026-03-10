@@ -4,10 +4,10 @@
 class launcher{
     public:
         launcher();
-        frc2::CommandPtr setLauncherSpeed(double targetSpeed);
-        frc2::CommandPtr launchByPower();
-        frc2::CommandPtr wallOfBalls();
-        frc2::CommandPtr launchZero();
+        void setLauncherSpeed(double distance);//This should be taking meter values from the camera
+        void launchByPower();
+        void wallOfBalls();
+        void launchZero();
     private:
         ctre::phoenix6::hardware::TalonFX mLauncherA{11};
         ctre::phoenix6::hardware::TalonFX mLauncherB{12};

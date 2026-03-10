@@ -5,12 +5,12 @@
 class intake{
     public:
         intake();
-        frc2::CommandPtr intakeLiftUp();
-        frc2::CommandPtr intakeLiftStop();
-        frc2::CommandPtr intakeLiftDown();
-        frc2::CommandPtr intakeIn();
-        frc2::CommandPtr intakeStop();
-        frc2::CommandPtr intakeOut();
+        void intakeLiftUp();
+        void intakeLiftStop();
+        void intakeLiftDown();
+        void intakeIn();
+        void intakeStop();
+        void intakeOut();
     private:
         ctre::phoenix6::hardware::TalonFX mLift{15};
         ctre::phoenix6::hardware::TalonFX mIntake{10};

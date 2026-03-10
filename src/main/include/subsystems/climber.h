@@ -4,9 +4,9 @@
 class climber{
     public:
         climber();
-        frc2::CommandPtr climbUp();
-        frc2::CommandPtr climbDown();
-        frc2::CommandPtr climbZero();
+        void climbUp();
+        void climbDown();
+        void climbZero();
     private:
         frc::DigitalInput minClimb{5};
         ctre::phoenix::motorcontrol::can::TalonSRX mClimb{9};

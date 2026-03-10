@@ -1,5 +1,5 @@
 #include <subsystems/launcher.h>
-
+#include <math.h>
 launcher::launcher(){
     ctre::phoenix6::configs::Slot0Configs slot0Configs{};
     slot0Configs.kS=0.1;
@@ -11,24 +11,25 @@ launcher::launcher(){
     mLauncherB.GetConfigurator().Apply(slot0Configs);
     frc::SmartDashboard::PutNumber("Launch",0.0);
 };
-frc2::CommandPtr launcher::setLauncherSpeed(double targetSpeed){
+void launcher::setLauncherSpeed(double distance){//This should be taking meter values from camera
+    double targetSpeed=((log((183.75/distance)-1))-6.41678)/-0.133244;
     frc::SmartDashboard::GetNumber("Launch",0.0);
     ctre::phoenix6::controls::VelocityVoltage m_request =ctre::phoenix6::controls::VelocityVoltage{0_tps}.WithSlot(0);
     mLauncherA.SetControl(m_request.WithVelocity(targetSpeed*1_tps).WithFeedForward(0.5_V));
     mLauncherB.SetControl(m_request.WithVelocity(targetSpeed*1_tps).WithFeedForward(0.5_V));
     return;
 };
-frc2::CommandPtr launcher::launchByPower(){
+void launcher::launchByPower(){
     mLauncherA.Set(0.5);
     mLauncherB.Set(0.5);
     return;
 };
-frc2::CommandPtr launcher::wallOfBalls(){
+void launcher::wallOfBalls(){
     mLauncherA.Set(0.9);
     mLauncherB.Set(0.9);
     return;
 };
-frc2::CommandPtr launcher::launchZero(){
+void launcher::launchZero(){
     mLauncherA.Set(0);
     mLauncherB.Set(0);
     return;

@@ -3,10 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "RobotContainer.h"
-#include "frc2/command/RunCommand.h"
-#include <frc2/command/Commands.h>
-#include <frc2/command/InstantCommand.h>
-#include <frc2/command/button/RobotModeTriggers.h>
+
 
 RobotContainer::RobotContainer()
 {
@@ -15,6 +12,8 @@ RobotContainer::RobotContainer()
 
 void RobotContainer::ConfigureBindings()
 {
+    double* distance;
+    double* AprilTagAngle;
     // Note that X is defined as forward according to WPILib convention,
     // and Y is defined as to the left according to WPILib convention.
     drivetrain.SetDefaultCommand(
@@ -27,14 +26,14 @@ void RobotContainer::ConfigureBindings()
     );
     
     //(coPilot.LeftStick()||coPilot.RightStick()).WhileTrue(Launcher.wallOfBalls()).OnFalse(Launcher.launchZero());
-    coPilot.POVDown().WhileTrue(Climber.climbDown()).OnFalse(Climber.climbZero());
-    coPilot.POVUp().WhileTrue(Climber.climbUp()).OnFalse(Climber.climbZero());
-    coPilot.A().WhileTrue(Intake.intakeLiftDown()).OnFalse(Intake.intakeLiftStop());
-    coPilot.Y().WhileTrue(Intake.intakeLiftUp()).OnFalse(Intake.intakeLiftStop());
-    coPilot.LeftBumper().WhileTrue(Intake.intakeIn()).OnFalse(Intake.intakeStop());
-    coPilot.RightBumper().WhileTrue(Intake.intakeOut()).OnFalse(Intake.intakeStop());
-    coPilot.RightTrigger().WhileTrue(Launcher.setLauncherSpeed(18)).OnFalse(Launcher.launchZero());
-    coPilot.LeftTrigger().WhileTrue(Hopper.hopperToLauncher()).OnFalse(Hopper.hopperZero());
+    coPilot.POVDown().WhileTrue(frc2::RunCommand([this]{Climber.climbDown();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Climber.climbZero();}).ToPtr());
+    coPilot.POVUp().WhileTrue(frc2::RunCommand([this]{Climber.climbUp();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Climber.climbZero();}).ToPtr());
+    coPilot.A().WhileTrue(frc2::RunCommand([this]{Intake.intakeLiftDown();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr());
+    coPilot.Y().WhileTrue(frc2::RunCommand([this]{Intake.intakeLiftUp();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr());
+    coPilot.LeftBumper().WhileTrue(frc2::RunCommand([this]{Intake.intakeIn();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Intake.intakeStop();}).ToPtr());
+    coPilot.RightBumper().WhileTrue(frc2::RunCommand([this]{Intake.intakeOut();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Intake.intakeStop();}).ToPtr());
+    //coPilot.RightTrigger().WhileTrue(frc2::RunCommand([this]{rotationalValues(ClosestHubId("limelight-b"), &distance, &AprilTagAngle, 5.75, 10));Launcher.setLauncherSpeed(distance));}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Launcher.launchZero();}).ToPtr());
+    coPilot.LeftTrigger().WhileTrue(frc2::RunCommand([this]{Hopper.hopperToLauncher();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Hopper.hopperZero();}).ToPtr());
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
     frc2::RobotModeTriggers::Disabled().WhileTrue(
