@@ -64,6 +64,7 @@ public:
 
 private:
     void ConfigureBindings();
+    double* distance;
     intake Intake;
     launcher Launcher;
     hopperFeeder Hopper;

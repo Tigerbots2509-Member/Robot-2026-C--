@@ -51,40 +51,30 @@ void Robot::TeleopPeriodic() {
     double distDerivative=0; //Rate of change of your proportional, smooths out the change
     frc::PIDController distTargetingPID(distProptional,distIntegral,distDerivative); //PID to maintain dist to target
     frc::PIDController angleTargetingPID{angleProptional,angleIntegral,angleDerivative}; //PID to maintain angle to target
-    if(driverController.GetAButton()&&tagTargeting(12, &distance, &rotation)){          //Do we want to move this to the drivetrain class or the vision class
-        frc::SmartDashboard::PutBoolean("TV", driverController.GetAButton());
-            frc::SmartDashboard::PutNumber("Angle PID Result:", .1*angleTargetingPID.Calculate(rotation,0));
-            rotation = .1*angleTargetingPID.Calculate(rotation,0);
-            frc::SmartDashboard::PutNumber("Distance PID Result:", distTargetingPID.Calculate(distance,1));
-            lateral = distTargetingPID.Calculate(distance,1);
+    if(driverController.GetAButton()&&rotationalValues(ClosestHubId("limelight-b"),&distance,&AprilTagAngle,5.75,10)){
+        if(tagTargeting(12, &distance, &rotation)){          //Do we want to move this to the drivetrain class or the vision class
+            frc::SmartDashboard::PutBoolean("TV", driverController.GetAButton());
+                frc::SmartDashboard::PutNumber("Angle PID Result:", .1*angleTargetingPID.Calculate(rotation,0));
+                rotation = .1*angleTargetingPID.Calculate(rotation,0);
+                frc::SmartDashboard::PutNumber("Distance PID Result:", distTargetingPID.Calculate(distance,1));
+                lateral = distTargetingPID.Calculate(distance,1);
+                m_container.drivetrain.SetControl(
+                m_container.aimedDrive.WithVelocityX(lateral* m_container.get_max_speed())
+                                        .WithVelocityY(strafe*m_container.get_max_speed())
+                                        .WithRotationalRate(rotation*m_container.get_max_angleRate())
+                );
 
-            m_container.drivetrain.SetControl(
-              m_container.aimedDrive.WithVelocityX(lateral* m_container.get_max_speed())
-                                    .WithVelocityY(strafe*m_container.get_max_speed())
-                                    .WithRotationalRate(rotation*m_container.get_max_angleRate())
-            );
-
-            //DriveTrain.tankDrive(-1*distTargetingPID.Calculate(distance,1.5),-1*angleTargetingPID.Calculate(rotation,0)); // While the A button is pressed it gets your dist and angle from ID 12 to maintain 1.5m dist and 0 degree angle
-            frc::SmartDashboard::PutNumber("Rotation:",rotation);
-            frc::SmartDashboard::PutNumber("Distance:",distance);
-            frc::SmartDashboard::PutNumber("power", angleTargetingPID.Calculate(rotation,0));
-    }else{
-        lateral = -driverController.GetLeftY();
-        rotation = driverController.GetRightX();
-        frc::SmartDashboard::PutBoolean("TV", driverController.GetAButton());
-        //DriveTrain.tankDrive(0, angleTargetingPID.Calculate(0,0));
-  }
-    if (coPilot.GetRightTriggerAxis()<0&&rotationalValues(ClosestHubId("limelight-b"), &distance, &AprilTagAngle, 5.75, 10)) {        //Wouldn't we want this apart of the drivers a button and not a seperate
-        Launcher.setLauncherSpeed(distance);
-        frc::SmartDashboard::PutNumber("Distance To AprilTag", distance);
-        frc::SmartDashboard::PutNumber("Angle to AprilTag", AprilTagAngle);
-    };
-    if(driverController.GetRightBumper()){
-        m_container.creepMult=0.75;
-    }else{
-        m_container.creepMult=1;
+                //DriveTrain.tankDrive(-1*distTargetingPID.Calculate(distance,1.5),-1*angleTargetingPID.Calculate(rotation,0)); // While the A button is pressed it gets your dist and angle from ID 12 to maintain 1.5m dist and 0 degree angle
+                frc::SmartDashboard::PutNumber("Rotation:",rotation);
+                frc::SmartDashboard::PutNumber("Distance:",distance);
+                frc::SmartDashboard::PutNumber("power", angleTargetingPID.Calculate(rotation,0));
+        }else{
+            lateral = -driverController.GetLeftY();
+            rotation = driverController.GetRightX();
+            frc::SmartDashboard::PutBoolean("TV", driverController.GetAButton());
+            //DriveTrain.tankDrive(0, angleTargetingPID.Calculate(0,0));
+        } 
     }
-    
 }
 
 void Robot::TeleopExit() {}
