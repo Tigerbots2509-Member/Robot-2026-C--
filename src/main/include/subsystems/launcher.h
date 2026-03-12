@@ -1,10 +1,11 @@
 #include "frc2/command/CommandPtr.h"
 #include <ctre/phoenix6/TalonFX.hpp>
-#include "frc/smartdashboard/SmartDashboard.h"
+#include <subsystems/vision.h>
+
 class launcher{
     public:
         launcher();
-        void setLauncherSpeed(double* distance);//This should be taking meter values from the camera
+        void setLauncherSpeed(double distance);//This should be taking meter values from the camera
         void launchByPower();
         void wallOfBalls();
         void launchZero();

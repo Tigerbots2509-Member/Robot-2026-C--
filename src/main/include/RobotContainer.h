@@ -13,7 +13,7 @@
 #include "subsystems/hopperFeeder.h"
 #include "subsystems/climber.h"
 #include "subsystems/vision.h"
-#include "frc2/command/RunCommand.h"
+#include <frc2/command/RunCommand.h>
 #include <frc2/command/Commands.h>
 #include <frc2/command/InstantCommand.h>
 #include <frc2/command/button/RobotModeTriggers.h>
@@ -64,7 +64,7 @@ public:
 
 private:
     void ConfigureBindings();
-    double* distance;
+    double distance;
     intake Intake;
     launcher Launcher;
     hopperFeeder Hopper;

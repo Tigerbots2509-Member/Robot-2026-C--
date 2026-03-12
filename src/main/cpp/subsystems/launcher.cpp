@@ -1,6 +1,4 @@
 #include <subsystems/launcher.h>
-#include <subsystems/vision.h>
-#include <math.h>
 launcher::launcher(){
     ctre::phoenix6::configs::Slot0Configs slot0Configs{};
     slot0Configs.kS=0.1;
@@ -12,10 +10,10 @@ launcher::launcher(){
     mLauncherB.GetConfigurator().Apply(slot0Configs);
     frc::SmartDashboard::PutNumber("Launch",0.0);
 };
-void launcher::setLauncherSpeed(double* distance){//This should be taking meter values from camera
-    if(rotationalValues(ClosestHubId("limelight-b"), distance, &angle,5.75,10)){  //This is here so that we can call this in the Robot Container binding Configs
+ void launcher::setLauncherSpeed(double distance){//This should be taking meter values from camera
+    if(rotationalValues(ClosestHubId("limelight-b"), &distance, &angle,5.75,10)){  //This is here so that we can call this in the Robot Container binding Configs
         frc::SmartDashboard::GetNumber("Launch",0.0);
-        double targetSpeed=((log((183.75/(*distance))-1))-6.41678)/-0.133244;
+        double targetSpeed=((log((183.75/(distance))-1))-6.41678)/-0.133244;
         ctre::phoenix6::controls::VelocityVoltage m_request =ctre::phoenix6::controls::VelocityVoltage{0_tps}.WithSlot(0);
         mLauncherA.SetControl(m_request.WithVelocity(targetSpeed*1_tps).WithFeedForward(0.5_V));
         mLauncherB.SetControl(m_request.WithVelocity(targetSpeed*1_tps).WithFeedForward(0.5_V));
