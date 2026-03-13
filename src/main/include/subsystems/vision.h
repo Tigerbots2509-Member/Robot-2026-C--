@@ -1,11 +1,13 @@
-#include "Robot.h" 
+//#include "Robot.h"
+#include "LimelightHelpers.h"
+#include <frc/DriverStation.h>
 #include <math.h>
-std::vector<LimelightHelpers::RawFiducial> getRawFiducials(std::string limelight_id)
+inline std::vector<LimelightHelpers::RawFiducial> getRawFiducials(std::string limelight_id)
 {
     LimelightHelpers::PoseEstimate BotPoseEstimate = LimelightHelpers::getBotPoseEstimate(limelight_id, "botpose", false);
     return BotPoseEstimate.rawFiducials;
 }
-bool tagTargeting(int tagId,double* distance,double* angle){
+inline bool tagTargeting(int tagId,double* distance,double* angle){
     std::vector<LimelightHelpers::RawFiducial> aprilTagResults = getRawFiducials("limelight-b");
     for (LimelightHelpers::RawFiducial aprilTag : aprilTagResults){
         if(aprilTag.id==tagId){
@@ -16,7 +18,7 @@ bool tagTargeting(int tagId,double* distance,double* angle){
     }
     return false;
 }
-bool rotationalValues(int tagId,double* distance,double* angle, double XCameraOffsetFromCenter, double YCameraOffsetFromCenter){
+inline bool rotationalValues(int tagId,double* distance,double* angle, double XCameraOffsetFromCenter, double YCameraOffsetFromCenter){
     double angleFromCamera;
     double horizontalFromCamera;
     double verticalFromCamera;
@@ -41,7 +43,7 @@ bool rotationalValues(int tagId,double* distance,double* angle, double XCameraOf
     //double cameraHypotonuse=sqrt(pow(distance*,2)/pow(ty,2));
     return false;
 }
-int ClosestHubId(std::string limelightId){
+inline int ClosestHubId(std::string limelightId){
     int blueTags[4] = {20,24,26,18};
     int redTags[4] = {10,2,8,4};
 

@@ -1,6 +1,5 @@
 #include <subsystems/launcher.h>
 launcher::launcher(){
-    ctre::phoenix6::configs::Slot0Configs slot0Configs{};
     slot0Configs.kS=0.1;
     slot0Configs.kV=0.12;
     slot0Configs.kP=0.11;

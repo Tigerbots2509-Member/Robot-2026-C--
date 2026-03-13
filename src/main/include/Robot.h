@@ -9,6 +9,7 @@
 #include <frc/TimedRobot.h>
 #include <optional>
 #include <LimelightHelpers.h>
+#include <frc/XboxController.h>
 #include "RobotContainer.h"
 #include <frc/controller/PIDController.h>
 #include <frc2/command/CommandScheduler.h>
