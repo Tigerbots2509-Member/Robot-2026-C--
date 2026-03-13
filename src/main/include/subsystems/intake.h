@@ -2,6 +2,8 @@
 #include "frc/DigitalInput.h"
 #include "frc2/command/CommandPtr.h"
 #include "frc/Encoder.h"
+#include "frc/smartdashboard/SmartDashboard.h"
+#include <ctre/phoenix6/signals/SpnEnums.hpp>
 class intake{
     public:
         intake();
@@ -11,9 +13,10 @@ class intake{
         void intakeIn();
         void intakeStop();
         void intakeOut();
+        frc::DigitalInput liftMax{4};
+        frc::Encoder eLift{2,3};
     private:
         ctre::phoenix6::hardware::TalonFX mLift{15};
         ctre::phoenix6::hardware::TalonFX mIntake{10};
-        frc::DigitalInput liftMax{4};
-        frc::Encoder eLift{2,3};
+        
 };

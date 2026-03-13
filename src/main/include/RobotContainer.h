@@ -12,6 +12,8 @@
 #include "subsystems/launcher.h"
 #include "subsystems/hopperFeeder.h"
 #include "subsystems/climber.h"
+#include "frc/Joystick.h"
+#include "frc2/command/button/JoystickButton.h"
 //#include "subsystems/vision.h"
 #include <frc2/command/RunCommand.h>
 #include <frc2/command/Commands.h>
@@ -43,7 +45,7 @@ private:
 public:
     double creepMult = 1;
     subsystems::CommandSwerveDrivetrain drivetrain{TunerConstants::CreateDrivetrain()};
-    frc2::CommandXboxController coPilot{1};
+    frc2::CommandXboxController coPilot{3};
     frc2::CommandXboxController joystick{0};
     swerve::requests::RobotCentric aimedDrive = swerve::requests::RobotCentric{}
         .WithDeadband(MaxSpeed*0.1).WithRotationalDeadband(MaxAngularRate*0.1) //Add a 10% deadband

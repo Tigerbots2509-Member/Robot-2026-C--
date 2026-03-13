@@ -7,7 +7,7 @@ class climber{
         void climbUp();
         void climbDown();
         void climbZero();
-    private:
         frc::DigitalInput minClimb{5};
+    private:
         ctre::phoenix::motorcontrol::can::TalonSRX mClimb{9};
 };

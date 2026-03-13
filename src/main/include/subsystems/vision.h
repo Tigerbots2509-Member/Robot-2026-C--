@@ -29,6 +29,7 @@ inline bool rotationalValues(int tagId,double* distance,double* angle, double XC
         if(aprilTag.id == tagId){
             // *distance = aprilTag.distToCamera;
             angleFromCamera = aprilTag.txnc;
+            angleFromCamera=angleFromCamera;
             horizontalFromCamera = aprilTag.tync;
             horizontalFromRobot = horizontalFromCamera + XCameraOffsetFromCenter;
             verticalFromCamera = std::sqrt(std::pow(aprilTag.distToCamera, 2) - std::pow(horizontalFromCamera, 2));
@@ -44,8 +45,8 @@ inline bool rotationalValues(int tagId,double* distance,double* angle, double XC
     return false;
 }
 inline int ClosestHubId(std::string limelightId){
-    int blueTags[4] = {20,24,26,18};
-    int redTags[4] = {10,2,8,4};
+    // int blueTags[4] = {20,24,26,18};
+    // int redTags[4] = {10,2,8,4};
 
     /*--- Filter AprilTag Ids By Alliance Color ---*/
     if(frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kBlue){

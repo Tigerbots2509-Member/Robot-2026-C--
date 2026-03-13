@@ -25,13 +25,18 @@ void RobotContainer::ConfigureBindings()
     );
     
     //(coPilot.LeftStick()||coPilot.RightStick()).WhileTrue(Launcher.wallOfBalls()).OnFalse(Launcher.launchZero());
-    joystick.LeftBumper().WhileTrue(frc2::InstantCommand([this]{creepMult=0.75;}).ToPtr()).OnFalse(frc2::InstantCommand([this]{creepMult=1;}).ToPtr());
-    coPilot.POVDown().WhileTrue(frc2::RunCommand([this]{Climber.climbDown();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Climber.climbZero();}).ToPtr());
+    joystick.POVUp().WhileTrue(frc2::InstantCommand([this]{drivetrain.GetPigeon2().SetYaw(0.0_deg);}).ToPtr());
+    joystick.LeftBumper().WhileTrue(frc2::InstantCommand([this]{creepMult=0.2;}).ToPtr()).OnFalse(frc2::InstantCommand([this]{creepMult=1;}).ToPtr());
+
+    coPilot.POVDown().WhileTrue(frc2::RunCommand([this]{Climber.climbDown();}).ToPtr().Until([this]{return Climber.minClimb.Get();}).AndThen([this]{frc2::InstantCommand([this]{Climber.climbZero();});})).OnFalse(frc2::InstantCommand([this]{Climber.climbZero();}).ToPtr());
     coPilot.POVUp().WhileTrue(frc2::RunCommand([this]{Climber.climbUp();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Climber.climbZero();}).ToPtr());
-    coPilot.A().WhileTrue(frc2::RunCommand([this]{Intake.intakeLiftDown();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr());
-    coPilot.Y().WhileTrue(frc2::RunCommand([this]{Intake.intakeLiftUp();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr());
+
+    coPilot.A().WhileTrue(frc2::RunCommand([this]{Intake.intakeLiftDown();}).ToPtr().Until([this]{return Intake.liftMax.Get();}).AndThen([this]{frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr();})).OnFalse(frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr());
+    coPilot.Y().WhileTrue(frc2::RunCommand([this]{Intake.intakeLiftUp();}).ToPtr().Until([this]{return Intake.eLift.Get()<-700;}).AndThen([this]{frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr();})).OnFalse(frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr());
+    
     coPilot.LeftBumper().WhileTrue(frc2::RunCommand([this]{Intake.intakeIn();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Intake.intakeStop();}).ToPtr());
     coPilot.RightBumper().WhileTrue(frc2::RunCommand([this]{Intake.intakeOut();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Intake.intakeStop();}).ToPtr());
+    
     coPilot.RightTrigger().WhileTrue(frc2::RunCommand([this]{Launcher.setLauncherSpeed(distance);}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Launcher.launchZero();}).ToPtr());
     coPilot.LeftTrigger().WhileTrue(frc2::RunCommand([this]{Hopper.hopperToLauncher();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Hopper.hopperZero();}).ToPtr());
     // Idle while the robot is disabled. This ensures the configured

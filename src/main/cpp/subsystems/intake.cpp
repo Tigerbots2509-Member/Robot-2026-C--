@@ -1,8 +1,12 @@
 #include <subsystems/intake.h>
-intake::intake(){};
+intake::intake(){
+    frc::SmartDashboard::PutBoolean("intake lift",liftMax.Get());
+    mLift.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
+};
 void intake::intakeIn(){
-    if(!liftMax.Get()){
+    if(liftMax.Get()){
         mIntake.Set(1);
+        eLift.Reset();
     }else{
         intakeStop();
     };
