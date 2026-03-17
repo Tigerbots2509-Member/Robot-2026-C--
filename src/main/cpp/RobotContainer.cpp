@@ -31,7 +31,7 @@ void RobotContainer::ConfigureBindings()
     coPilot.POVDown().WhileTrue(frc2::RunCommand([this]{Climber.climbDown();}).ToPtr().Until([this]{return Climber.minClimb.Get();}).AndThen([this]{frc2::InstantCommand([this]{Climber.climbZero();});})).OnFalse(frc2::InstantCommand([this]{Climber.climbZero();}).ToPtr());
     coPilot.POVUp().WhileTrue(frc2::RunCommand([this]{Climber.climbUp();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Climber.climbZero();}).ToPtr());
 
-    coPilot.A().WhileTrue(frc2::RunCommand([this]{Intake.intakeLiftDown();}).ToPtr().Until([this]{return Intake.liftMax.Get();}).AndThen([this]{frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr();})).OnFalse(frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr());
+    coPilot.A().WhileTrue(frc2::RunCommand([this]{Intake.intakeLiftDown();}).ToPtr().Until([this]{return Intake.liftMin.Get();}).AndThen([this]{frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr();})).OnFalse(frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr());
     coPilot.Y().WhileTrue(frc2::RunCommand([this]{Intake.intakeLiftUp();}).ToPtr().Until([this]{return Intake.eLift.Get()<-700;}).AndThen([this]{frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr();})).OnFalse(frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr());
     
     coPilot.LeftBumper().WhileTrue(frc2::RunCommand([this]{Intake.intakeIn();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Intake.intakeStop();}).ToPtr());
@@ -64,7 +64,16 @@ void RobotContainer::ConfigureBindings()
 
     drivetrain.RegisterTelemetry([this](auto const &state) { logger.Telemeterize(state); });
 }
+void RobotContainer::namedCommands(){
+    pathplanner::NamedCommands::registerCommand("Intake lift up", frc2::RunCommand([this]{Intake.intakeLiftUp();}).ToPtr().Until([this]{return Intake.eLift.Get()<-700;}).AndThen(frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr()));
+    pathplanner::NamedCommands::registerCommand("Intake lift down", frc2::RunCommand([this]{Intake.intakeLiftDown();}).ToPtr().Until([this]{return Intake.liftMin.Get();}).AndThen(frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr()));
 
+    pathplanner::NamedCommands::registerCommand("Intake in",frc2::RunCommand([this]{Intake.intakeIn();}).ToPtr().WithTimeout(3.5_s).AndThen(frc2::InstantCommand([this]{Intake.intakeStop();}).ToPtr()));
+    
+    //pathplanner::NamedCommands::registerCommand("Launcher firing",frc2::RunCommand([this]{}));
+
+
+}
 frc2::CommandPtr RobotContainer::GetAutonomousCommand()
 {
     // Simple drive forward auton

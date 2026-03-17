@@ -14,7 +14,7 @@
 #include "subsystems/climber.h"
 #include "frc/Joystick.h"
 #include "frc2/command/button/JoystickButton.h"
-//#include "subsystems/vision.h"
+#include "pathplanner/lib/auto/NamedCommands.h"
 #include <frc2/command/RunCommand.h>
 #include <frc2/command/Commands.h>
 #include <frc2/command/InstantCommand.h>
@@ -47,7 +47,7 @@ public:
     subsystems::CommandSwerveDrivetrain drivetrain{TunerConstants::CreateDrivetrain()};
     frc2::CommandXboxController coPilot{3};
     frc2::CommandXboxController joystick{0};
-    swerve::requests::RobotCentric drive = swerve::requests::RobotCentric{}
+    swerve::requests::RobotCentric aimeddrive = swerve::requests::RobotCentric{}
         .WithDeadband(MaxSpeed*0.1).WithRotationalDeadband(MaxAngularRate*0.1) //Add a 10% deadband
         .WithDriveRequestType(swerve::DriveRequestType::OpenLoopVoltage)
         .WithSteerRequestType(swerve::SteerRequestType::Position);
@@ -55,7 +55,7 @@ public:
     units::meters_per_second_t get_max_speed(){return MaxSpeed;}
     units::radians_per_second_t get_max_angleRate(){return MaxAngularRate;}
     frc2::CommandPtr GetAutonomousCommand();
-
+    void namedCommands();
 private:
     void ConfigureBindings();
     double distance;

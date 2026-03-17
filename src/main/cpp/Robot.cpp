@@ -60,7 +60,7 @@ void Robot::TeleopPeriodic() {
                 lateral = distTargetingPID.Calculate(distance,1);
                 strafe=lateral;
                 m_container.drivetrain.SetControl(
-                m_container.aimedDrive.WithVelocityX(lateral* m_container.get_max_speed())
+                m_container.aimeddrive.WithVelocityX(lateral* m_container.get_max_speed())
                                         .WithVelocityY(strafe*m_container.get_max_speed())
                                         .WithRotationalRate(rotation*m_container.get_max_angleRate())
                 );

@@ -13,7 +13,7 @@ class intake{
         void intakeIn();
         void intakeStop();
         void intakeOut();
-        frc::DigitalInput liftMax{4};
+        frc::DigitalInput liftMin{4};
         frc::Encoder eLift{2,3};
     private:
         ctre::phoenix6::hardware::TalonFX mLift{15};
