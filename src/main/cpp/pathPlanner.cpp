@@ -30,7 +30,7 @@ pathPlanner::pathPlanner(){
             }
             return false;
         },
-        this // Reference to this subsystem to set requirements
+        &driveTrain // Reference to this subsystem to set requirements
     );
 }
 frc::Pose2d pathPlanner::getPose(){

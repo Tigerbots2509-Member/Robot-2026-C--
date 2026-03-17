@@ -47,18 +47,10 @@ public:
     subsystems::CommandSwerveDrivetrain drivetrain{TunerConstants::CreateDrivetrain()};
     frc2::CommandXboxController coPilot{3};
     frc2::CommandXboxController joystick{0};
-    swerve::requests::RobotCentric aimedDrive = swerve::requests::RobotCentric{}
+    swerve::requests::RobotCentric drive = swerve::requests::RobotCentric{}
         .WithDeadband(MaxSpeed*0.1).WithRotationalDeadband(MaxAngularRate*0.1) //Add a 10% deadband
         .WithDriveRequestType(swerve::DriveRequestType::OpenLoopVoltage)
         .WithSteerRequestType(swerve::SteerRequestType::Position);
-
-    // void setAimedValues(double rotation, double strafe, double lateral){
-    //     // drivetrain.ApplyRequest([this]() -> auto&& {
-    //     //     return aimedDrive.WithVelocityX(lateral * MaxSpeed) // Drive forward with negative Y (forward)
-    //     //         .WithVelocityY(strafe * MaxSpeed) // Drive left with negative X (left)
-    //     //         .WithRotationalRate(rotation * MaxAngularRate) // Drive counterclockwise with negative X (left)
-    //     // })
-    // }
     RobotContainer();
     units::meters_per_second_t get_max_speed(){return MaxSpeed;}
     units::radians_per_second_t get_max_angleRate(){return MaxAngularRate;}
