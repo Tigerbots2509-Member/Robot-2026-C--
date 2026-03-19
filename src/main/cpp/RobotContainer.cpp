@@ -70,9 +70,7 @@ void RobotContainer::namedCommands(){
 
     pathplanner::NamedCommands::registerCommand("Intake in",frc2::RunCommand([this]{Intake.intakeIn();}).ToPtr().WithTimeout(3.5_s).AndThen(frc2::InstantCommand([this]{Intake.intakeStop();}).ToPtr()));
     
-    //pathplanner::NamedCommands::registerCommand("Launcher firing",frc2::RunCommand([this]{}));
-
-
+    pathplanner::NamedCommands::registerCommand("Launcher firing",frc2::RunCommand([this]{Hopper.hopperToLauncher();}).ToPtr().WithTimeout(3.5_s).AndThen(frc2::RunCommand([this]{Launcher.setLauncherSpeed(distance);}).ToPtr()).WithTimeout(5.5_s).AndThen(frc2::InstantCommand([this]{Launcher.launchZero();}).ToPtr()).AndThen(frc2::InstantCommand([this]{Hopper.hopperZero();}).ToPtr()));
 }
 frc2::CommandPtr RobotContainer::GetAutonomousCommand()
 {

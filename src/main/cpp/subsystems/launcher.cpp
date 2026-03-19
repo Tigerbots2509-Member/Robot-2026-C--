@@ -34,3 +34,7 @@ void launcher::launchZero(){
     mLauncherB.Set(0);
     return;
 }
+void launcher::launchReverse(){
+    mLauncherA.Set(-0.7);
+    mLauncherB.Set(-0.7);
+}

@@ -15,6 +15,7 @@
 #include "frc/Joystick.h"
 #include "frc2/command/button/JoystickButton.h"
 #include "pathplanner/lib/auto/NamedCommands.h"
+#include "frc2/command/ParallelCommandGroup.h"
 #include <frc2/command/RunCommand.h>
 #include <frc2/command/Commands.h>
 #include <frc2/command/InstantCommand.h>
@@ -62,6 +63,5 @@ private:
     intake Intake;
     launcher Launcher;
     hopperFeeder Hopper;
-    climber Climber;
-    
+    climber Climber;    
 };

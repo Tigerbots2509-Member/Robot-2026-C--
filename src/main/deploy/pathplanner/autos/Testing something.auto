@@ -11,21 +11,41 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Intake Balls"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Intake Balls"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake in"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "sequential",
           "data": {
-            "pathName": "Launch"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake lift up"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Launch"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Launcher firing"
+                }
+              }
+            ]
           }
         }
       ]

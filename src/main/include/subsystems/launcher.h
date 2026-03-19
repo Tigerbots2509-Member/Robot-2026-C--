@@ -10,6 +10,7 @@ class launcher{
         void launchByPower();
         void wallOfBalls();
         void launchZero();
+        void launchReverse();
     private:
         ctre::phoenix6::configs::Slot0Configs slot0Configs{};
         double angle;
