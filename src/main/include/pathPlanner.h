@@ -18,17 +18,9 @@
 class pathPlanner{
     public:
         pathPlanner();
-        frc::Pose2d getPose();
-        void resetPose(frc::Pose2d pose);
-        frc::ChassisSpeeds getRobotRelativeSpeeds();
-        void driveRobotRelative(frc::ChassisSpeeds speed);
-        frc::Rotation2d getRotation2d();
-        frc::Pose2d startPose2d;
+        //frc::Rotation2d getRotation2d();
+        //frc::Pose2d startPose2d;
     private:
-        swerve::requests::RobotCentric drive = swerve::requests::RobotCentric{}
-            .WithDeadband(MaxSpeed*0.1).WithRotationalDeadband(MaxAngularRate*0.1) //Add a 10% deadband
-            .WithDriveRequestType(swerve::DriveRequestType::OpenLoopVoltage)
-            .WithSteerRequestType(swerve::SteerRequestType::Position);
         subsystems::CommandSwerveDrivetrain driveTrain{TunerConstants::CreateDrivetrain()};
         RobotContainer container;
         std::array<frc::SwerveModuleState,4> states{
@@ -48,13 +40,6 @@ class pathPlanner{
             frc::Translation2d(-0.3048_m,0.3048_m),
             frc::Translation2d(-0.3048_m,-0.3048_m),
         };
-        frc::SwerveDrivePoseEstimator<4> swerveEstimator{kinematics,getRotation2d(),positions,startPose2d};
-        double vx;
-        double vy;
-        double vOmega;
-        units::meters_per_second_t MaxSpeed = 1.0 * TunerConstants::kSpeedAt12Volts; // kSpeedAt12Volts desired top speed
-        units::radians_per_second_t MaxAngularRate = 0.75_tps; // 3/4 of a rotation per second max angular velocity
-        units::meters_per_second_t get_max_speed(){return MaxSpeed;}
-        units::radians_per_second_t get_max_angleRate(){return MaxAngularRate;}
-        
+        swerve::requests::ApplyRobotSpeeds autoRobotSpeedsRequest = swerve::requests::ApplyRobotSpeeds();
+        //frc::SwerveDrivePoseEstimator<4> swerveEstimator{kinematics,getRotation2d(),positions,startPose2d};        
 };
