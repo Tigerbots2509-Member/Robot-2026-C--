@@ -1,14 +1,11 @@
 #include <pathPlanner.h>
 using namespace pathplanner;
 pathPlanner::pathPlanner(){
-    
     // Do all subsystem initialization here
-    // ...
 
     // Load the RobotConfig from the GUI settings. You should probably
     // store this in your Constants file
     RobotConfig config = RobotConfig::fromGUISettings();
-
     // Configure the AutoBuilder last
     AutoBuilder::configure(
         [this](){ return driveTrain.GetState().Pose; }, // Robot pose supplier

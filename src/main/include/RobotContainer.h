@@ -11,7 +11,6 @@
 #include "subsystems/intake.h"
 #include "subsystems/launcher.h"
 #include "subsystems/hopperFeeder.h"
-#include "subsystems/climber.h"
 #include "frc/Joystick.h"
 #include "frc2/command/button/JoystickButton.h"
 #include "pathplanner/lib/auto/NamedCommands.h"
@@ -57,11 +56,11 @@ public:
     units::radians_per_second_t get_max_angleRate(){return MaxAngularRate;}
     frc2::CommandPtr GetAutonomousCommand();
     void namedCommands();
+    //frc::SwerveDrivePoseEstimator<4> poseEstimator;
 private:
     void ConfigureBindings();
     double distance;
     intake Intake;
     launcher Launcher;
-    hopperFeeder Hopper;
-    climber Climber;    
+    hopperFeeder Hopper;    
 };
