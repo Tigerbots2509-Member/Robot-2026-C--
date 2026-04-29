@@ -8,10 +8,12 @@
 RobotContainer::RobotContainer()
 {
     ConfigureBindings();
+    ConfigureAutoBuilder();
+    // frc::SmartDashboard::ClearPersistent("Auto Chooser");
+    // frc::SmartDashboard::PutData("Auto Chooser", autoChooser);
 }
 
-void RobotContainer::ConfigureBindings()
-{
+void RobotContainer::ConfigureBindings(){
 
     // Note that X is defined as forward according to WPILib convention,
     // and Y is defined as to the left according to WPILib convention.
@@ -28,17 +30,14 @@ void RobotContainer::ConfigureBindings()
     joystick.POVUp().WhileTrue(frc2::InstantCommand([this]{drivetrain.GetPigeon2().SetYaw(0.0_deg);}).ToPtr());
     joystick.LeftBumper().WhileTrue(frc2::InstantCommand([this]{creepMult=0.2;}).ToPtr()).OnFalse(frc2::InstantCommand([this]{creepMult=1;}).ToPtr());
 
-    coPilot.POVDown().WhileTrue(frc2::RunCommand([this]{Climber.climbDown();}).ToPtr().Until([this]{return Climber.minClimb.Get();}).AndThen([this]{frc2::InstantCommand([this]{Climber.climbZero();});})).OnFalse(frc2::InstantCommand([this]{Climber.climbZero();}).ToPtr());
-    coPilot.POVUp().WhileTrue(frc2::RunCommand([this]{Climber.climbUp();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Climber.climbZero();}).ToPtr());
-
-    coPilot.A().WhileTrue(frc2::RunCommand([this]{Intake.intakeLiftDown();}).ToPtr().Until([this]{return Intake.liftMin.Get();}).AndThen([this]{frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr();})).OnFalse(frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr());
-    coPilot.Y().WhileTrue(frc2::RunCommand([this]{Intake.intakeLiftUp();}).ToPtr().Until([this]{return Intake.eLift.Get()<-700;}).AndThen([this]{frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr();})).OnFalse(frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr());
+    A7.WhileTrue(frc2::RunCommand([this]{Intake.intakeLiftDown();}).ToPtr().Until([this]{return Intake.liftMin.Get();}).AndThen([this]{frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr();})).OnFalse(frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr());
+    A6.WhileTrue(frc2::RunCommand([this]{Intake.intakeLiftUp();}).ToPtr().Until([this]{return Intake.eLift.Get()<-700;}).AndThen([this]{frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr();})).OnFalse(frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr());
     
-    coPilot.LeftBumper().WhileTrue(frc2::RunCommand([this]{Intake.intakeIn();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Intake.intakeStop();}).ToPtr());
-    coPilot.RightBumper().WhileTrue(frc2::RunCommand([this]{Intake.intakeOut();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Intake.intakeStop();}).ToPtr());
+    A8.WhileTrue(frc2::RunCommand([this]{Intake.intakeIn();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Intake.intakeStop();}).ToPtr());
+    //coPilot.RightBumper().WhileTrue(frc2::RunCommand([this]{Intake.intakeOut();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Intake.intakeStop();}).ToPtr());
     
-    coPilot.RightTrigger().WhileTrue(frc2::RunCommand([this]{Launcher.setLauncherSpeed(distance);}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Launcher.launchZero();}).ToPtr());
-    coPilot.LeftTrigger().WhileTrue(frc2::RunCommand([this]{Hopper.hopperToLauncher();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Hopper.hopperZero();}).ToPtr());
+    A1.WhileTrue(frc2::RunCommand([this]{Launcher.setLauncherSpeed(distance);}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Launcher.launchZero();}).ToPtr());
+    A2.WhileTrue(frc2::RunCommand([this]{Hopper.hopperToLauncher();}).ToPtr()).OnFalse(frc2::InstantCommand([this]{Hopper.hopperZero();}).ToPtr());
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
     frc2::RobotModeTriggers::Disabled().WhileTrue(
@@ -72,8 +71,42 @@ void RobotContainer::namedCommands(){
     
     pathplanner::NamedCommands::registerCommand("Launcher firing",frc2::RunCommand([this]{Hopper.hopperToLauncher();}).ToPtr().WithTimeout(3.5_s).AndThen(frc2::RunCommand([this]{Launcher.setLauncherSpeed(distance);}).ToPtr()).WithTimeout(5.5_s).AndThen(frc2::InstantCommand([this]{Launcher.launchZero();}).ToPtr()).AndThen(frc2::InstantCommand([this]{Hopper.hopperZero();}).ToPtr()));
 }
-frc2::CommandPtr RobotContainer::GetAutonomousCommand()
-{
+void RobotContainer::ConfigureAutoBuilder(){
+    // Do all subsystem initialization here
+
+    // Load the RobotConfig from the GUI settings. You should probably
+    // store this in your Constants file
+    pathplanner::RobotConfig config = pathplanner::RobotConfig::fromGUISettings();
+    // Configure the AutoBuilder last
+    pathplanner::AutoBuilder::configure(
+        [this](){ return drivetrain.GetState().Pose; }, // Robot pose supplier
+        [this](frc::Pose2d pose){ drivetrain.ResetPose(pose); }, // Method to reset odometry (will be called if your auto has a starting pose)
+        [this](){ return drivetrain.GetState().Speeds; }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        [this](frc::ChassisSpeeds speeds, pathplanner::DriveFeedforwards feedforwards){ drivetrain.SetControl(autoRobotSpeedsRequest.WithSpeeds(frc::ChassisSpeeds::Discretize(speeds.vx,speeds.vy,speeds.omega, 0.020_s))
+            .WithWheelForceFeedforwardsX(feedforwards.robotRelativeForcesX)
+            .WithWheelForceFeedforwardsY(feedforwards.robotRelativeForcesY));}, 
+        
+        // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+        std::make_shared<pathplanner::PPHolonomicDriveController>( // PPHolonomicController is the built in path following controller for holonomic drive trains
+            pathplanner::PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+            pathplanner::PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+        ),
+        config, // The robot configuration
+        []() {
+            // Boolean supplier that controls when the path will be mirrored for the red alliance
+            // This will flip the path being followed to the red side of the field.
+            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+            auto alliance = frc::DriverStation::GetAlliance();
+            if (alliance) {
+                return alliance.value() == frc::DriverStation::Alliance::kRed;
+            }
+            return false;
+        },
+        &drivetrain // Reference to this subsystem to set requirements
+    );
+}
+frc2::CommandPtr RobotContainer::GetAutonomousCommand(){
     // Simple drive forward auton
     return frc2::cmd::Sequence(
         // Reset our field centric heading to match the robot
@@ -89,4 +122,5 @@ frc2::CommandPtr RobotContainer::GetAutonomousCommand()
         // Finally idle for the rest of auton
         drivetrain.ApplyRequest([] { return swerve::requests::Idle{}; })
     );
+    //This is the pathplanner "load an auto"
 }

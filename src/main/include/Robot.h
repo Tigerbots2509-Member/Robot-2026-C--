@@ -5,10 +5,10 @@
 #pragma once
 
 #include "ctre/phoenix6/HootAutoReplay.hpp"
-#include <frc/smartdashboard/SmartDashboard.h>
+// #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/TimedRobot.h>
 #include <optional>
-#include <LimelightHelpers.h>
+// #include <LimelightHelpers.h>
 #include <frc/XboxController.h>
 #include "RobotContainer.h"
 #include <frc/controller/PIDController.h>

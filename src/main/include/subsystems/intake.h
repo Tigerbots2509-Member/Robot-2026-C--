@@ -16,7 +16,9 @@ class intake{
         frc::DigitalInput liftMin{4};
         frc::Encoder eLift{2,3};
     private:
-        ctre::phoenix6::hardware::TalonFX mLift{15};
-        ctre::phoenix6::hardware::TalonFX mIntake{10};
+        ctre::phoenix6::hardware::TalonFX mLiftA{15};
+        ctre::phoenix6::hardware::TalonFX mLiftB{16};
+        ctre::phoenix6::hardware::TalonFX mIntakeA{13};
+        ctre::phoenix6::hardware::TalonFX mIntakeB{14};
         
 };

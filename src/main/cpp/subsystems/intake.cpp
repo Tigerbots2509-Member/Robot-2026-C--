@@ -1,43 +1,36 @@
 #include <subsystems/intake.h>
 intake::intake(){
     frc::SmartDashboard::PutBoolean("intake lift",liftMin.Get());
-    mLift.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
+    mLiftA.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
+    mLiftB.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
 };
 void intake::intakeIn(){
-    if(liftMin.Get()){
-        mIntake.Set(1);
-        eLift.Reset();
-    }else{
-        intakeStop();
-    };
+    mIntakeA.Set(1);
+    mIntakeB.Set(-1);
     return;
 };
 void intake::intakeOut(){
-    mIntake.Set(-1);
+    mIntakeA.Set(-1);
+    mIntakeB.Set(1);
     return;
 };
 void intake::intakeStop(){
-    mIntake.Set(0);
+    mIntakeA.Set(0);
+    mIntakeB.Set(0);
     return;
 };
 void intake::intakeLiftDown(){
-    if(!liftMin.Get()){
-        mLift.Set(0.15);
-    }else{
-        eLift.Reset();
-        intakeLiftStop();
-    }
+    mLiftA.Set(0.25);
+    mLiftB.Set(-0.25);
     return;
 };
 void intake::intakeLiftUp(){
-    if(eLift.Get()>=700){
-        intakeLiftStop();
-    }else{
-        mIntake.Set(-0.15);
-    }
+    mLiftA.Set(-0.25);
+    mLiftB.Set(0.25);
     return;
 };
 void intake::intakeLiftStop(){
-    mIntake.Set(0);
+    mLiftA.Set(0);
+    mLiftB.Set(0);
     return;
 };
