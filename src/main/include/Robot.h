@@ -31,7 +31,7 @@ public:
     void TestExit() override;
 
 private:
-    std::optional<frc2::CommandPtr> m_autonomousCommand;
+    std::optional<frc2::Command*> m_autonomousCommand;
     RobotContainer m_container;
     frc::XboxController driverController{0};
     // frc2::Trigger xButton = test.X();

@@ -4,13 +4,15 @@
 
 #include "RobotContainer.h"
 
-
 RobotContainer::RobotContainer()
 {
     ConfigureBindings();
     ConfigureAutoBuilder();
-    // frc::SmartDashboard::ClearPersistent("Auto Chooser");
-    // frc::SmartDashboard::PutData("Auto Chooser", autoChooser);
+    GetAutonomousCommand();
+    autoChooser = pathplanner::AutoBuilder::buildAutoChooserFilter([this] 
+			(const pathplanner::PathPlannerAuto& autoCommand)
+			{return autoCommand.GetName().starts_with("Comp");});
+	frc::SmartDashboard::PutData("Auto Chooser", &autoChooser);
 }
 
 void RobotContainer::ConfigureBindings(){
@@ -53,12 +55,7 @@ void RobotContainer::ConfigureBindings(){
 
     // Run SysId routines when holding back/start and X/Y.
     // Note that each routine should be run exactly once in a single log.
-    (joystick.Back() && joystick.Y()).WhileTrue(drivetrain.SysIdDynamic(frc2::sysid::Direction::kForward));
-    (joystick.Back() && joystick.X()).WhileTrue(drivetrain.SysIdDynamic(frc2::sysid::Direction::kReverse));
-    (joystick.Start() && joystick.Y()).WhileTrue(drivetrain.SysIdQuasistatic(frc2::sysid::Direction::kForward));
-    (joystick.Start() && joystick.X()).WhileTrue(drivetrain.SysIdQuasistatic(frc2::sysid::Direction::kReverse));
 
-    // reset the field-centric heading on left bumper press
     joystick.LeftBumper().OnTrue(drivetrain.RunOnce([this] { drivetrain.SeedFieldCentric(); }));
 
     drivetrain.RegisterTelemetry([this](auto const &state) { logger.Telemeterize(state); });
@@ -105,22 +102,10 @@ void RobotContainer::ConfigureAutoBuilder(){
         },
         &drivetrain // Reference to this subsystem to set requirements
     );
+    poseEstimator.ResetPose(startPose);
+
 }
-frc2::CommandPtr RobotContainer::GetAutonomousCommand(){
-    // Simple drive forward auton
-    return frc2::cmd::Sequence(
-        // Reset our field centric heading to match the robot
-        // facing away from our alliance station wall (0 deg).
-        drivetrain.RunOnce([this] { drivetrain.SeedFieldCentric(frc::Rotation2d{0_deg}); }),
-        // Then slowly drive forward (away from us) for 5 seconds.
-        drivetrain.ApplyRequest([this]() -> auto&& {
-            return drive.WithVelocityX(0.5_mps)
-                .WithVelocityY(0_mps)
-                .WithRotationalRate(0_tps);
-        })
-        .WithTimeout(5_s),
-        // Finally idle for the rest of auton
-        drivetrain.ApplyRequest([] { return swerve::requests::Idle{}; })
-    );
+frc2::Command* RobotContainer::GetAutonomousCommand(){
     //This is the pathplanner "load an auto"
+    return autoChooser.GetSelected();
 }

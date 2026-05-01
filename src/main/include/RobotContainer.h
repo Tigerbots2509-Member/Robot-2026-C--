@@ -34,6 +34,9 @@
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/kinematics/ChassisSpeeds.h>
 #include <frc/kinematics/SwerveModuleState.h>
+#include <pathplanner/lib/auto/NamedCommands.h>
+#include <pathplanner/lib/commands/PathPlannerAuto.h>
+#include <memory>
 
 class RobotContainer {
 private:
@@ -59,6 +62,7 @@ private:
     
 
 public:
+    frc::SendableChooser<frc2::Command*> autoChooser;  //line 12 and 13 compile;
     double creepMult = 1;
     subsystems::CommandSwerveDrivetrain drivetrain{TunerConstants::CreateDrivetrain()};
     frc::Joystick boardA{1};
@@ -71,7 +75,7 @@ public:
     RobotContainer();
     units::meters_per_second_t get_max_speed(){return MaxSpeed;}
     units::radians_per_second_t get_max_angleRate(){return MaxAngularRate;}
-    frc2::CommandPtr GetAutonomousCommand();
+    frc2::Command* GetAutonomousCommand();
     void namedCommands();
     frc2::JoystickButton A1{&boardA,1};
     frc2::JoystickButton A2{&boardA,2};
@@ -91,18 +95,22 @@ public:
 private:
     void ConfigureBindings();
     void ConfigureAutoBuilder();
+    void Periodic();
+    frc::SendableChooser<frc2::Command*> GetSelection();
     double distance;
     intake Intake;
     launcher Launcher;
     hopperFeeder Hopper;
     //From here down is the auto stuff
-    // frc::SendableChooser<frc2::Command> autoChooser;
+    //frc::SendableChooser<frc2::Command> autoChooser;
+    
     std::array<frc::SwerveModulePosition,4> positions{
         drivetrain.GetModule(0).GetPosition(false),
         drivetrain.GetModule(1).GetPosition(false),
         drivetrain.GetModule(2).GetPosition(false),
         drivetrain.GetModule(3).GetPosition(false)
     };
+    frc::Pose2d startPose=frc::Pose2d{0_m,0_m,0_deg};
     frc::Rotation2d rotation2d = drivetrain.GetPigeon2().GetRotation2d();
         // Locations for the swerve drive modules relative to the robot center.
     frc::Translation2d m_frontLeftLocation{8.5_in, 8.5_in};
@@ -113,5 +121,5 @@ private:
     frc::SwerveDriveKinematics<4> kinematics{
     m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation,m_backRightLocation};
     swerve::requests::ApplyRobotSpeeds autoRobotSpeedsRequest = swerve::requests::ApplyRobotSpeeds();
-    frc::SwerveDrivePoseEstimator<4> poseEstimator{kinematics,frc::Rotation2d{},positions,frc::Pose2d{},{0.0,0.0,0.0},{0.0,0.0,0.0}};
+    frc::SwerveDrivePoseEstimator<4> poseEstimator{kinematics,drivetrain.GetPigeon2().GetRotation2d(),positions,startPose};
 };
