@@ -19,6 +19,7 @@
 #include <frc2/command/Commands.h>
 #include <frc2/command/InstantCommand.h>
 #include <frc2/command/button/RobotModeTriggers.h>
+#include <frc/smartdashboard/Field2d.h>
 //Check for double including
 #include <pathplanner/lib/auto/AutoBuilder.h>
 #include <pathplanner/lib/config/RobotConfig.h>
@@ -62,6 +63,7 @@ private:
     
 
 public:
+    frc::Field2d field;
     frc::SendableChooser<frc2::Command*> autoChooser;  //line 12 and 13 compile;
     double creepMult = 1;
     subsystems::CommandSwerveDrivetrain drivetrain{TunerConstants::CreateDrivetrain()};
@@ -95,7 +97,9 @@ public:
 private:
     void ConfigureBindings();
     void ConfigureAutoBuilder();
+    void ApplyStart();
     void Periodic();
+    frc::SwerveDrivePoseEstimator<4>* poseEstimator; 
     frc::SendableChooser<frc2::Command*> GetSelection();
     double distance;
     intake Intake;
@@ -105,10 +109,10 @@ private:
     //frc::SendableChooser<frc2::Command> autoChooser;
     
     std::array<frc::SwerveModulePosition,4> positions{
-        drivetrain.GetModule(0).GetPosition(false),
-        drivetrain.GetModule(1).GetPosition(false),
-        drivetrain.GetModule(2).GetPosition(false),
-        drivetrain.GetModule(3).GetPosition(false)
+        drivetrain.GetModule(0).GetPosition(true),
+        drivetrain.GetModule(1).GetPosition(true),
+        drivetrain.GetModule(2).GetPosition(true),
+        drivetrain.GetModule(3).GetPosition(true)
     };
     frc::Pose2d startPose=frc::Pose2d{0_m,0_m,0_deg};
     frc::Rotation2d rotation2d = drivetrain.GetPigeon2().GetRotation2d();
@@ -121,5 +125,5 @@ private:
     frc::SwerveDriveKinematics<4> kinematics{
     m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation,m_backRightLocation};
     swerve::requests::ApplyRobotSpeeds autoRobotSpeedsRequest = swerve::requests::ApplyRobotSpeeds();
-    frc::SwerveDrivePoseEstimator<4> poseEstimator{kinematics,drivetrain.GetPigeon2().GetRotation2d(),positions,startPose};
+    
 };

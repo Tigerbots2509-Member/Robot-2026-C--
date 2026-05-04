@@ -11,7 +11,7 @@ RobotContainer::RobotContainer()
     GetAutonomousCommand();
     autoChooser = pathplanner::AutoBuilder::buildAutoChooserFilter([this] 
 			(const pathplanner::PathPlannerAuto& autoCommand)
-			{return autoCommand.GetName().starts_with("Comp");});
+			{return autoCommand.GetName().starts_with("A");});
 	frc::SmartDashboard::PutData("Auto Chooser", &autoChooser);
 }
 
@@ -60,6 +60,16 @@ void RobotContainer::ConfigureBindings(){
 
     drivetrain.RegisterTelemetry([this](auto const &state) { logger.Telemeterize(state); });
 }
+
+//FROM HERE DOWN IS AUTO STUFF
+void RobotContainer::ApplyStart(){
+    std::string autoName=autoChooser.GetSelected()->GetName();
+    auto pathGroup = pathplanner::PathPlannerAuto::getPathGroupFromAutoFile(autoName);
+    if(!pathGroup.empty()){
+        pathplanner::AutoBuilder::resetOdom(pathGroup[0]->getStartingHolonomicPose().value());
+        startPose=pathGroup[0]->getStartingHolonomicPose().value();
+    }
+}
 void RobotContainer::namedCommands(){
     pathplanner::NamedCommands::registerCommand("Intake lift up", frc2::RunCommand([this]{Intake.intakeLiftUp();}).ToPtr().Until([this]{return Intake.eLift.Get()<-700;}).AndThen(frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr()));
     pathplanner::NamedCommands::registerCommand("Intake lift down", frc2::RunCommand([this]{Intake.intakeLiftDown();}).ToPtr().Until([this]{return Intake.liftMin.Get();}).AndThen(frc2::InstantCommand([this]{Intake.intakeLiftStop();}).ToPtr()));
@@ -70,7 +80,6 @@ void RobotContainer::namedCommands(){
 }
 void RobotContainer::ConfigureAutoBuilder(){
     // Do all subsystem initialization here
-
     // Load the RobotConfig from the GUI settings. You should probably
     // store this in your Constants file
     pathplanner::RobotConfig config = pathplanner::RobotConfig::fromGUISettings();
@@ -102,10 +111,19 @@ void RobotContainer::ConfigureAutoBuilder(){
         },
         &drivetrain // Reference to this subsystem to set requirements
     );
-    poseEstimator.ResetPose(startPose);
-
+    poseEstimator= new frc::SwerveDrivePoseEstimator<4>{kinematics,drivetrain.GetPigeon2().GetRotation2d(),positions,startPose};
+    poseEstimator->ResetPose(startPose);
 }
 frc2::Command* RobotContainer::GetAutonomousCommand(){
     //This is the pathplanner "load an auto"
     return autoChooser.GetSelected();
+}
+void RobotContainer::Periodic(){
+    if (frc::DriverStation::IsDisabled()&&frc::SmartDashboard::GetBoolean("ApplyStart",false)){
+        poseEstimator->ResetPose(startPose);
+        drivetrain.GetPigeon2().SetYaw(poseEstimator->GetEstimatedPosition().Rotation().Degrees());
+    }
+    poseEstimator->Update(drivetrain.GetPigeon2().GetRotation2d(),positions);
+    frc::SmartDashboard::PutData("Field",&field);
+    field.SetRobotPose(poseEstimator->GetEstimatedPosition());
 }
