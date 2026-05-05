@@ -8,6 +8,7 @@
 Robot::Robot(){}
 
 void Robot::RobotPeriodic() {
+    m_container.Periodic();
     m_timeAndJoystickReplay.Update();
     frc2::CommandScheduler::GetInstance().Run();
 }

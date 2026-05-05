@@ -8,7 +8,7 @@ inline std::vector<LimelightHelpers::RawFiducial> getRawFiducials(std::string li
     return BotPoseEstimate.rawFiducials;
 }
 inline bool tagTargeting(int tagId,double* distance,double* angle){
-    std::vector<LimelightHelpers::RawFiducial> aprilTagResults = getRawFiducials("limelight-b");
+    std::vector<LimelightHelpers::RawFiducial> aprilTagResults = getRawFiducials("limelight-shoot");
     for (LimelightHelpers::RawFiducial aprilTag : aprilTagResults){
         if(aprilTag.id==tagId){
             *distance=aprilTag.distToCamera;
@@ -24,7 +24,7 @@ inline bool rotationalValues(int tagId,double* distance,double* angle, double XC
     double verticalFromCamera;
     double horizontalFromRobot;
     double verticalFromRobot;
-    std::vector<LimelightHelpers::RawFiducial> aprilTagResults = getRawFiducials("limelight-b");
+    std::vector<LimelightHelpers::RawFiducial> aprilTagResults = getRawFiducials("limelight-shoot");
     for (LimelightHelpers::RawFiducial aprilTag : aprilTagResults){
         if(aprilTag.id == tagId){
             // *distance = aprilTag.distToCamera;

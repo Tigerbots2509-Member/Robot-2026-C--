@@ -130,7 +130,7 @@ private:
     static constexpr int kFrontLeftDriveMotorId = 1;
     static constexpr int kFrontLeftSteerMotorId = 2;
     static constexpr int kFrontLeftEncoderId = 21;
-    static constexpr units::turn_t kFrontLeftEncoderOffset = -0.29541015625_tr;
+    static constexpr units::turn_t kFrontLeftEncoderOffset = -0.23095703125_tr;
     static constexpr bool kFrontLeftSteerMotorInverted = true;
     static constexpr bool kFrontLeftEncoderInverted = false;
 
@@ -141,7 +141,7 @@ private:
     static constexpr int kFrontRightDriveMotorId = 3;
     static constexpr int kFrontRightSteerMotorId = 4;
     static constexpr int kFrontRightEncoderId = 22;
-    static constexpr units::turn_t kFrontRightEncoderOffset = -0.365966796875_tr;
+    static constexpr units::turn_t kFrontRightEncoderOffset = -0.136962890625_tr;
     static constexpr bool kFrontRightSteerMotorInverted = true;
     static constexpr bool kFrontRightEncoderInverted = false;
 
@@ -152,7 +152,7 @@ private:
     static constexpr int kBackLeftDriveMotorId = 5;
     static constexpr int kBackLeftSteerMotorId = 6;
     static constexpr int kBackLeftEncoderId = 23;
-    static constexpr units::turn_t kBackLeftEncoderOffset = 0.09326171875_tr;
+    static constexpr units::turn_t kBackLeftEncoderOffset = -0.3779296875_tr;
     static constexpr bool kBackLeftSteerMotorInverted = true;
     static constexpr bool kBackLeftEncoderInverted = false;
 
@@ -163,13 +163,12 @@ private:
     static constexpr int kBackRightDriveMotorId = 7;
     static constexpr int kBackRightSteerMotorId = 8;
     static constexpr int kBackRightEncoderId = 24;
-    static constexpr units::turn_t kBackRightEncoderOffset = 0.310302734375_tr;
+    static constexpr units::turn_t kBackRightEncoderOffset = 0.39453125_tr;
     static constexpr bool kBackRightSteerMotorInverted = true;
     static constexpr bool kBackRightEncoderInverted = false;
 
     static constexpr units::inch_t kBackRightXPos = -8.5_in;
     static constexpr units::inch_t kBackRightYPos = -8.5_in;
-
 
 public:
     static constexpr swerve::SwerveModuleConstants FrontLeft = ConstantCreator.CreateModuleConstants(

@@ -10,7 +10,7 @@ launcher::launcher(){
     frc::SmartDashboard::PutNumber("Launch",0.0);
 };
  void launcher::setLauncherSpeed(double distance){//This should be taking meter values from camera
-    if(rotationalValues(ClosestHubId("limelight-b"), &distance, &angle,5.75,10)){  //This is here so that we can call this in the Robot Container binding Configs
+    if(rotationalValues(ClosestHubId("limelight-shoot"), &distance, &angle,5.75,10)){  //This is here so that we can call this in the Robot Container binding Configs
         frc::SmartDashboard::GetNumber("Launch",0.0);
         double targetSpeed=(((log((183.75/(distance*39.701))-1))-6.41678)/-0.133244)*0.98;
         ctre::phoenix6::controls::VelocityVoltage m_request =ctre::phoenix6::controls::VelocityVoltage{0_tps}.WithSlot(0);

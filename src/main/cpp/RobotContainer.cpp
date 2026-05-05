@@ -11,9 +11,10 @@ RobotContainer::RobotContainer()
     GetAutonomousCommand();
     autoChooser = pathplanner::AutoBuilder::buildAutoChooserFilter([this] 
 			(const pathplanner::PathPlannerAuto& autoCommand)
-			{return autoCommand.GetName().starts_with("A");});
+			{return autoCommand.GetName().starts_with("Comp");});
+    //autoChooser.SetDefaultOption("CompDoNothing", pathplanner::AutoBuilder::buildAuto("CompDoNothing"));
 	frc::SmartDashboard::PutData("Auto Chooser", &autoChooser);
-}
+    }
 
 void RobotContainer::ConfigureBindings(){
 
@@ -119,10 +120,10 @@ frc2::Command* RobotContainer::GetAutonomousCommand(){
     return autoChooser.GetSelected();
 }
 void RobotContainer::Periodic(){
-    if (frc::DriverStation::IsDisabled()&&frc::SmartDashboard::GetBoolean("ApplyStart",false)){
-        poseEstimator->ResetPose(startPose);
-        drivetrain.GetPigeon2().SetYaw(poseEstimator->GetEstimatedPosition().Rotation().Degrees());
-    }
+    // if (frc::DriverStation::IsDisabled()){
+    //     poseEstimator->ResetPose(startPose);
+    //     drivetrain.GetPigeon2().SetYaw(poseEstimator->GetEstimatedPosition().Rotation().Degrees());
+    // }
     poseEstimator->Update(drivetrain.GetPigeon2().GetRotation2d(),positions);
     frc::SmartDashboard::PutData("Field",&field);
     field.SetRobotPose(poseEstimator->GetEstimatedPosition());

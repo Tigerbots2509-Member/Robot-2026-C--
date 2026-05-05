@@ -63,8 +63,9 @@ private:
     
 
 public:
+    void Periodic();
     frc::Field2d field;
-    frc::SendableChooser<frc2::Command*> autoChooser;  //line 12 and 13 compile;
+    frc::SendableChooser<frc2::Command*> autoChooser;
     double creepMult = 1;
     subsystems::CommandSwerveDrivetrain drivetrain{TunerConstants::CreateDrivetrain()};
     frc::Joystick boardA{1};
@@ -98,7 +99,6 @@ private:
     void ConfigureBindings();
     void ConfigureAutoBuilder();
     void ApplyStart();
-    void Periodic();
     frc::SwerveDrivePoseEstimator<4>* poseEstimator; 
     frc::SendableChooser<frc2::Command*> GetSelection();
     double distance;
@@ -109,10 +109,10 @@ private:
     //frc::SendableChooser<frc2::Command> autoChooser;
     
     std::array<frc::SwerveModulePosition,4> positions{
-        drivetrain.GetModule(0).GetPosition(true),
-        drivetrain.GetModule(1).GetPosition(true),
-        drivetrain.GetModule(2).GetPosition(true),
-        drivetrain.GetModule(3).GetPosition(true)
+        drivetrain.GetModule(0).GetPosition(false),
+        drivetrain.GetModule(1).GetPosition(false),
+        drivetrain.GetModule(2).GetPosition(false),
+        drivetrain.GetModule(3).GetPosition(false)
     };
     frc::Pose2d startPose=frc::Pose2d{0_m,0_m,0_deg};
     frc::Rotation2d rotation2d = drivetrain.GetPigeon2().GetRotation2d();
