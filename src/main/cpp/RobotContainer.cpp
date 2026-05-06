@@ -125,7 +125,5 @@ void RobotContainer::Periodic(){
     //     poseEstimator->ResetPose(startPose);
     //     drivetrain.GetPigeon2().SetYaw(poseEstimator->GetEstimatedPosition().Rotation().Degrees());
     // }
-    poseEstimator->Update(drivetrain.GetPigeon2().GetRotation2d(),positions);
-    frc::SmartDashboard::PutData("Field",&field);
-    field.SetRobotPose(poseEstimator->GetEstimatedPosition());
+    
 }

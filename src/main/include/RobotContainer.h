@@ -63,6 +63,12 @@ private:
     
 
 public:
+    std::array<frc::SwerveModulePosition,4> positions{
+        drivetrain.GetModule(0).GetPosition(false),
+        drivetrain.GetModule(1).GetPosition(false),
+        drivetrain.GetModule(2).GetPosition(false),
+        drivetrain.GetModule(3).GetPosition(false)
+    };
     void Periodic();
     frc::Field2d field;
     frc::Pose2d visionPose2d;
@@ -110,12 +116,7 @@ private:
     //From here down is the auto stuff
     //frc::SendableChooser<frc2::Command> autoChooser;
     
-    std::array<frc::SwerveModulePosition,4> positions{
-        drivetrain.GetModule(0).GetPosition(false),
-        drivetrain.GetModule(1).GetPosition(false),
-        drivetrain.GetModule(2).GetPosition(false),
-        drivetrain.GetModule(3).GetPosition(false)
-    };
+    
     frc::Pose2d startPose=frc::Pose2d{0_m,0_m,0_deg};
     frc::Rotation2d rotation2d = drivetrain.GetPigeon2().GetRotation2d();
         // Locations for the swerve drive modules relative to the robot center.

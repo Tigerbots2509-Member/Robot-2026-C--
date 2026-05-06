@@ -8,16 +8,18 @@
 Robot::Robot(){}
 
 void Robot::RobotPeriodic() {
-    m_container.Periodic();
     if(LimelightHelpers::getTV("limelight-shoot")){
         m_container.visionPose2d=LimelightHelpers::getBotPose2d_wpiBlue("limelight-shoot");
-        timestamp=LimelightHelpers::getBotPoseEstimate("limelight-shoot","botpose_ wpiblue",false).timestampSeconds;
+        timestamp=LimelightHelpers::getBotPoseEstimate("limelight-shoot","botpose_wpiblue",false).timestampSeconds;
         m_container.poseEstimator->AddVisionMeasurement(m_container.visionPose2d,timestamp);
     }else if(LimelightHelpers::getTV("limelight-intake")){
         m_container.visionPose2d=LimelightHelpers::getBotPose2d_wpiBlue("limelight-intake");
         timestamp=LimelightHelpers::getBotPoseEstimate("limelight-intake","botpose_wpiblue",false).timestampSeconds;
         m_container.poseEstimator->AddVisionMeasurement(m_container.visionPose2d,timestamp);
     }
+    m_container.poseEstimator->Update(m_container.drivetrain.GetPigeon2().GetRotation2d(),m_container.positions);
+    frc::SmartDashboard::PutData("Field",&m_container.field);
+    m_container.field.SetRobotPose(m_container.poseEstimator->GetEstimatedPosition());
     m_timeAndJoystickReplay.Update();
     frc2::CommandScheduler::GetInstance().Run();
 }
