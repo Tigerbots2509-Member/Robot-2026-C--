@@ -15,6 +15,7 @@
 #include <frc2/command/CommandScheduler.h>
 class Robot : public frc::TimedRobot {
 public:
+    units::second_t timestamp;
     Robot();
     void RobotPeriodic() override;
     void DisabledInit() override;

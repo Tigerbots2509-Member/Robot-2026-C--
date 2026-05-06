@@ -65,7 +65,9 @@ private:
 public:
     void Periodic();
     frc::Field2d field;
+    frc::Pose2d visionPose2d;
     frc::SendableChooser<frc2::Command*> autoChooser;
+    frc::SwerveDrivePoseEstimator<4>* poseEstimator; 
     double creepMult = 1;
     subsystems::CommandSwerveDrivetrain drivetrain{TunerConstants::CreateDrivetrain()};
     frc::Joystick boardA{1};
@@ -99,7 +101,7 @@ private:
     void ConfigureBindings();
     void ConfigureAutoBuilder();
     void ApplyStart();
-    frc::SwerveDrivePoseEstimator<4>* poseEstimator; 
+    
     frc::SendableChooser<frc2::Command*> GetSelection();
     double distance;
     intake Intake;
