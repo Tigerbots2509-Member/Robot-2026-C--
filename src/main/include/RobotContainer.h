@@ -101,7 +101,7 @@ private:
     void ConfigureBindings();
     void ConfigureAutoBuilder();
     void ApplyStart();
-    
+    frc::SwerveModuleState getStates();
     frc::SendableChooser<frc2::Command*> GetSelection();
     double distance;
     intake Intake;

@@ -14,7 +14,7 @@ RobotContainer::RobotContainer()
 			{return autoCommand.GetName().starts_with("Comp");});
     //autoChooser.SetDefaultOption("CompDoNothing", pathplanner::AutoBuilder::buildAuto("CompDoNothing"));
 	frc::SmartDashboard::PutData("Auto Chooser", &autoChooser);
-    }
+}
 
 void RobotContainer::ConfigureBindings(){
 
@@ -112,14 +112,13 @@ void RobotContainer::ConfigureAutoBuilder(){
         },
         &drivetrain // Reference to this subsystem to set requirements
     );
-    poseEstimator= new frc::SwerveDrivePoseEstimator<4>{kinematics,drivetrain.GetPigeon2().GetRotation2d(),positions,startPose};
+    poseEstimator= new frc::SwerveDrivePoseEstimator<4>{kinematics,frc::Rotation2d{},{drivetrain.GetModule(0).GetPosition(false),drivetrain.GetModule(1).GetPosition(false),drivetrain.GetModule(2).GetPosition(false),drivetrain.GetModule(3).GetPosition(false)},frc::Pose2d{},{0,0,0},{0,0,0}};
     poseEstimator->ResetPose(startPose);
 }
 frc2::Command* RobotContainer::GetAutonomousCommand(){
     //This is the pathplanner "load an auto"
     return autoChooser.GetSelected();
 }
-
 void RobotContainer::Periodic(){
     // if (frc::DriverStation::IsDisabled()){
     //     poseEstimator->ResetPose(startPose);
